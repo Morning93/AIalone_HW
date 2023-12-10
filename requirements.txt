@@ -1,0 +1,4 @@
+jupyter==1.0.0
+opencv-contrib-python==4.8.1.78
+Pillow==9.4.0
+matplotlib==3.7.2

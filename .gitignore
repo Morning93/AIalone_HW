@@ -1,0 +1,5 @@
+*.ckpt
+*.txt
+!requirements.txt
+*.json
+data

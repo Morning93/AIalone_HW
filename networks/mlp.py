@@ -1,14 +1,18 @@
 import torch
-from torch import nn as nn
+import torch.nn as nn 
 
+# AI 모델 설계도 만들기 (class)
+# init, forward 구현하기 
 class myMLP(nn.Module):
-    def __init__(self, image_size, hidden_size, num_class): 
+    def __init__(self, args): 
         super().__init__()
-        self.image_size = image_size 
-        self.mlp1 = nn.Linear(in_features=image_size*image_size, out_features=hidden_size)
-        self.mlp2 = nn.Linear(in_features=hidden_size, out_features=hidden_size)
-        self.mlp3 = nn.Linear(in_features=hidden_size, out_features=hidden_size)
-        self.mlp4 = nn.Linear(in_features=hidden_size, out_features=num_class)
+        self.image_size = args.image_size 
+        self.hidden_size = args.hidden_size
+        self.num_class = args.num_class
+        self.mlp1 = nn.Linear(in_features=self.image_size*self.image_size, out_features=self.hidden_size)
+        self.mlp2 = nn.Linear(in_features=self.hidden_size, out_features=self.hidden_size)
+        self.mlp3 = nn.Linear(in_features=self.hidden_size, out_features=self.hidden_size)
+        self.mlp4 = nn.Linear(in_features=self.hidden_size, out_features=self.num_class)
 
     def forward(self, x): # x : [batch_size, height, width]
         batch_size = x.shape[0]

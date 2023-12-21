@@ -1,20 +1,31 @@
-import os
+import os 
+import json 
 import torch
-import json
+from PIL import Image
 
-
-def make_result_folder(args):
+# 전체 저장 폴더를 담고 있는 최상위 results folder를 만들고 그 경로를 받아옴 
+def make_results_folder(args): 
     if not os.path.exists(args.results_folder_path) : 
         os.makedirs(args.results_folder_path)
 
-def make_save_folder(args):
+# 저장할 데이터를 품고있을 상위폴더의 위치를 찾아내야함 
+def make_sub_results(args):
     folder_contents = os.listdir(args.results_folder_path) + ['-1']
     max_folder_name = max([int(f) for f in folder_contents])
     new_folder_name = str(max_folder_name + 1).zfill(2)
     save_path = os.path.join(args.results_folder_path, new_folder_name)
-    os.makedirs(save_path)
     args.save_path = save_path
+    os.makedirs(args.save_path)
 
+
+# 선언한 hparam을 저장 
+def save_hparam(args): 
+    dict_args = vars(args).copy()
+    del dict_args['device']
+    with open(os.path.join(args.save_path, 'hparam.json'), 'w') as f: 
+        json.dump(dict_args, f, indent=4)
+
+# 평가 함수 구현 (입력: model, dataloader) 
 def evaluate(model, dataloader, device): 
     with torch.no_grad() :
         model.eval() 
@@ -59,21 +70,17 @@ def evaluate_per_class(model, dataloader, device, total_num_class=10):
     model.train()
     return acc # 10짜리 벡터 텐서의 형태 
 
-def save_hparam(args):
-    dict_args = vars(args).copy() # device를 떼고 저장해야 하는데 원본을 건드리면 안되니까 copy!
-    del dict_args['device']
-    with open(os.path.join(args.save_path, 'hparam.json'), 'w') as f:
-        json.dump(dict_args, f, indent = 4)
+def get_loadfolder_path(args):
+    p = ''
+    for path in args.load_folder : 
+        p = os.path.join(p, path)
+    args.load_folder = p
 
-def save_model(args, model):
-    torch.save(model.state_dict(), 
-               os.path.join(args.save_path, 'best_model.ckpt'))
-    
-def get_ckpt_path(args):
-    ckpt_path = os.path.join(args.load_folder, 'best_model.ckpt')
-    return ckpt_path
-
-def get_hparam_path(args):
-    hparam_path = os.path.join(args.load_folder, 'hparam.txt')
-    return hparam_path
-
+def load_image(args): 
+    image = Image.open(args.target_image_path)
+    ### data의 종류가 mnist, CIFAR로 다양해짐. 이때, mnist만 흑백으로 변환하면 되기 때문에 조건문!
+    if args.data == 'MNIST':
+        image = image.convert('L')
+    elif args.data == 'CIFAR':
+        pass
+    return image 

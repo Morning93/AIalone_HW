@@ -12,7 +12,8 @@ def parse_train_args():
     parser.add_argument('--results_folder_path', type=str, default='results')
 
     # 사용하는 데이터셋에 관한 argument 추가
-    parser.add_argument('--model_type', type = str, default = 'mlp', choices = ['mlp', 'lenet'])
+    parser.add_argument('--model_type', type = str, default = 'mlp', 
+                        choices = ['mlp', 'lenet', 'lenet_inj', 'lenet_multiconv', 'lenet_incep', 'lenet_nh'])
     parser.add_argument('--data', type = str, default = 'MNIST', choices = ['MNIST', 'CIFAR'])
     
     args = parser.parse_args() 

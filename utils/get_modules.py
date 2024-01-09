@@ -58,6 +58,18 @@ def get_model(args):
     elif args.model == 'lenet':
         from networks.lenet import LeNet
         model = LeNet(args).to(args.device)
+    elif args.model == 'lenet_inj':
+        from networks.lenet import LeNet_inj
+        model = LeNet_inj(args).to(args.device)
+    elif args.model == 'lenet_multiconv':
+        from networks.lenet import LeNet_multiconv
+        model = LeNet_multiconv(args).to(args.device)
+    elif args.model == 'lenet_incep':
+        from networks.lenet import LeNet_incep
+        model = LeNet_incep(args).to(args.device)
+    elif args.model == 'lenet_nh':
+        from networks.lenet import LeNet_nh
+        model = LeNet_nh(args).to(args.device)
         
     return model 
 
